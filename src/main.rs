@@ -8,5 +8,5 @@ fn main() {
 
     let html = "<html></html>";
     let root = html::parse(html.to_string());
-    println!("{}", root);
+    println!("{:?}", root);
 }

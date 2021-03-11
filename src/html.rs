@@ -1,4 +1,4 @@
-use dom;
+use crate::dom;
 use std::collections::HashMap;
 
 pub fn parse(source: String) -> dom::Node {
@@ -135,12 +135,7 @@ impl Parser {
       attributes.insert(name, value);
     }
 
-    attributes;
-  }
-
-  // 解析属性，key="xxx"
-  fn parse_attr(&mut self) -> (String, String) {
-    return ("hello".to_string(), "dd".to_string());
+    attributes
   }
 
   fn parse_attribute(&mut self) -> (String, String) {
@@ -152,7 +147,7 @@ impl Parser {
 
     // 属性值
     let value = self.parse_attr_value();
-    (name, value);
+    (name, value)
   }
 
   // 解析属性值，遇到 " 或 ' 结束
@@ -162,7 +157,7 @@ impl Parser {
 
     let value = self.consume_while(|c| c != open_quote);
     assert!(self.consume_char() == open_quote);
-    value;
+    value
   }
 
   // 循环解析节点
@@ -180,6 +175,6 @@ impl Parser {
       nodes.push(node);
     }
 
-    nodes;
+    nodes
   }
 }
