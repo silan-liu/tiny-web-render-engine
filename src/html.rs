@@ -9,8 +9,10 @@ pub fn parse(source: String) -> dom::Node {
   .parse_nodes();
 
   if nodes.len() == 1 {
+    println!("has root node!");
     nodes.swap_remove(0)
   } else {
+    println!("has no root node!");
     dom::elem("html".to_string(), HashMap::new(), nodes)
   }
 }

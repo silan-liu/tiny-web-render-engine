@@ -6,7 +6,7 @@ fn main() {
     let node = dom::text(String::from("hello"));
     println!("{:?}", node);
 
-    let html = "<html></html>";
+    let html = "<html><p>sss</p><span>eee2</span></html>";
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 }
