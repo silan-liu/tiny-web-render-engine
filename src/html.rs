@@ -97,6 +97,7 @@ impl Parser {
 
     // 解析标签名
     let tag_name = self.parse_tag_name();
+    println!("tag_name:{}", tag_name);
 
     // 解析属性
     let attributes = self.parse_attributes();
@@ -141,6 +142,7 @@ impl Parser {
   }
 
   fn parse_attribute(&mut self) -> (String, String) {
+    println!("parse_attribute");
     // 属性名
     let name = self.parse_tag_name();
 
@@ -169,6 +171,8 @@ impl Parser {
     loop {
       self.consume_whitespace();
 
+      // "</" 的判断，是为了找嵌套标签时，跳出。比如，<html></html>，在解析完<html>后，会重新调用 parse_nodes 解析子标签
+      // 这时字符串是  </html>。
       if self.eof() || self.starts_with("</") {
         break;
       }
