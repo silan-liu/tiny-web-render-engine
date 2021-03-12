@@ -1,3 +1,5 @@
+use crate::source;
+
 #[derive(Debug)]
 pub struct StyleSheet {
   pub rules: Vec<Rule>,
@@ -48,9 +50,8 @@ pub struct Color {
 }
 
 // css 解析器
-struct Parser {
-  pos: usize,
-  input: String,
+struct CSSParser {
+  source_helper: source::SourceHelper,
 }
 
 pub type Specificity = (usize, usize, usize);
@@ -61,20 +62,25 @@ impl Value {}
 
 // 对外提供的解析方法
 pub fn parse(source: String) -> StyleSheet {
-  let mut parser = Parser {
+  let source_helper = source::SourceHelper {
     pos: 0,
     input: source,
   };
 
-  StyleSheet {
-    rules: parser.parse_rules(),
-  }
+  let mut parser = CSSParser {
+    source_helper: source_helper,
+  };
+
+  let rules = parser.parse_rules();
+  StyleSheet { rules: rules }
 }
 
 // 解析器
-impl Parser {
+impl CSSParser {
   fn parse_rules(&mut self) -> Vec<Rule> {
     let mut rules = Vec::new();
+
+    self.source_helper.consume_whitespace();
     rules.push(self.parse_rule());
     rules
   }
