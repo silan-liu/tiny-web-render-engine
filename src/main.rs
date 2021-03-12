@@ -8,7 +8,7 @@ fn main() {
     let node = dom::text(String::from("hello"));
     println!("{:?}", node);
 
-    let html = "<html></html>";
+    let html = "<html><p>hello</p></html>";
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 
