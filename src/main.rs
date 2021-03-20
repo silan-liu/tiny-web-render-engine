@@ -12,6 +12,7 @@ fn main() {
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 
-    let css_source = "";
-    css::parse(css_source.to_string());
+    let css_source = ".container {background-color:#332234;margin-top:10.2px;postion:absolute;}";
+    let css_rules = css::parse(css_source.to_string());
+    println!("{:?}", css_rules);
 }
