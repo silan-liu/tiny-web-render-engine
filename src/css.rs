@@ -66,7 +66,6 @@ impl Selector {
     let b = simple.class.len();
     let c = simple.tag_name.iter().count();
 
-    // a,b,c 只有可能存在一个有值，因为组合选择器会拆分为不同的 SimpleSelector
     (a, b, c)
   }
 }
@@ -119,7 +118,7 @@ impl CSSParser {
     }
   }
 
-  // 解析组合选择器，返回数组
+  // 解析组合选择器，以","分隔，返回数组
   fn parse_selectors(&mut self) -> Vec<Selector> {
     let mut selectors = Vec::new();
     loop {
