@@ -65,6 +65,8 @@ impl Selector {
     let a = simple.id.iter().count();
     let b = simple.class.len();
     let c = simple.tag_name.iter().count();
+
+    // a,b,c 只有可能存在一个有值，因为组合选择器会拆分为不同的 SimpleSelector
     (a, b, c)
   }
 }
@@ -117,12 +119,15 @@ impl CSSParser {
     }
   }
 
+  // 解析组合选择器，返回数组
   fn parse_selectors(&mut self) -> Vec<Selector> {
     let mut selectors = Vec::new();
     loop {
       let simple_selector = self.parse_simple_selector();
 
       let selector = Selector::Simple(simple_selector);
+      println!("selector:{:?}", selector);
+
       selectors.push(selector);
 
       self.source_helper.consume_whitespace();
@@ -142,6 +147,7 @@ impl CSSParser {
     selectors
   }
 
+  // 解析单个选择器
   fn parse_simple_selector(&mut self) -> SimpleSelector {
     let mut selector = SimpleSelector {
       tag_name: None,
@@ -180,10 +186,12 @@ impl CSSParser {
     selector
   }
 
+  // 解析字母数字-_组成的符号
   fn parse_identifier(&mut self) -> String {
     self.source_helper.consume_while(valid_identifier_char)
   }
 
+  // 解析单个规则中的设置的所有属性
   fn parse_declarations(&mut self) -> Vec<Declaration> {
     assert_eq!(self.source_helper.consume_char(), '{');
     let mut declarations = Vec::new();
@@ -200,7 +208,7 @@ impl CSSParser {
     declarations
   }
 
-  // 键值对，margin-top: 12px;background-color:red
+  // 解析属性，键值对，margin-top: 12px;background-color:red
   fn parse_declaration(&mut self) -> Declaration {
     let property_name = self.parse_identifier();
     self.source_helper.consume_whitespace();
@@ -217,6 +225,7 @@ impl CSSParser {
     }
   }
 
+  // 解析属性值，数字、色值、字符串
   fn parse_value(&mut self) -> Value {
     match self.source_helper.next_char() {
       '0'..='9' => self.parse_length(),
@@ -225,11 +234,12 @@ impl CSSParser {
     }
   }
 
+  // 解析数字和单位
   fn parse_length(&mut self) -> Value {
     Value::Length(self.parse_float(), self.parse_unit())
   }
 
-  // 解析数值
+  // 解析浮点数
   fn parse_float(&mut self) -> f32 {
     let s = self.source_helper.consume_while(|c| match c {
       '0'..='9' | '.' => true,
@@ -270,6 +280,7 @@ impl CSSParser {
   }
 }
 
+// 有效的字符
 fn valid_identifier_char(c: char) -> bool {
   match c {
     'a'..='z' | 'A'..='Z' | '0'..='9' | '-' | '_' => true,
