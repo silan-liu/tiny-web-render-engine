@@ -9,13 +9,15 @@ fn main() {
     let node = dom::text(String::from("hello"));
     println!("{:?}", node);
 
-    let html = "<html><p>hello</p></html>";
+    let html = "<html><div classes=\"note\" id=\"test\"><p>hello</p></div></html>";
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 
-    let css_source = "div.note {background-color:#332234;margin-top:10.2px;postion:absolute;}";
+    let css_source =
+        "#test {display:none;} p, div.note, #hello {background-color:#332234;margin-top:10.2px;postion:absolute;}";
     let stylesheet = css::parse(css_source.to_string());
     println!("{:?}", stylesheet);
 
-    style::style_tree(&root, &stylesheet);
+    let style_tree = style::style_tree(&root, &stylesheet);
+    println!("{:?}", style_tree);
 }
