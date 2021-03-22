@@ -75,10 +75,33 @@ fn build_layout_tree<'a>(style_node: &'a StyleNode<'a>) -> LayoutBox<'a> {
   for child in &style_node.children {
     match child.display() {
       Display::Block => root.children.push(build_layout_tree(child)),
-      Display::Inline => root.children.push(build_layout_tree(child)),
+      Display::Inline => root
+        .get_inline_container()
+        .children
+        .push(build_layout_tree(child)),
       Display::None => {}
     }
   }
 
   root
+}
+
+impl<'a> LayoutBox<'a> {
+  // if a block node has inline child，simply create a anonymous block wrapping the inline node
+  fn get_inline_container(&mut self) -> &mut LayoutBox<'a> {
+    match self.box_type {
+      InlineNode(_) | AnonymousBlock => self,
+      BlockNode(_) => {
+        match self.children.last() {
+          Some(&LayoutBox {
+            box_type: AnonymousBlock,
+            ..
+          }) => {}
+          _ => self.children.push(LayoutBox::new(AnonymousBlock)),
+        }
+
+        self.children.last_mut().unwrap()
+      }
+    }
+  }
 }
