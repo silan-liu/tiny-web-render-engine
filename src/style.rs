@@ -55,7 +55,7 @@ impl<'a> StyleNode<'a> {
   }
 
   // 先查找 name 的值，不存在，则查找 fallback_name 的值，若仍然不存在，则返回 default
-  pub fn lookup(&self, name: &str, fallback_name: &str, default: Value) -> Value {
+  pub fn lookup(&self, name: &str, fallback_name: &str, default: &Value) -> Value {
     self
       .value(name)
       .unwrap_or_else(|| self.value(fallback_name).unwrap_or_else(|| default.clone()))
