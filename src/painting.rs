@@ -15,6 +15,7 @@ pub enum DisplayCommand {
 // 绘制命令列表
 pub type DisplayList = Vec<DisplayCommand>;
 
+// 处理绘制命令，转换为像素点
 pub fn paint(layout_root: &LayoutBox, bounds: Rect) -> Canvas {
   let display_list = build_display_list(layout_root);
   let mut canvas = Canvas::new(bounds.width as usize, bounds.height as usize);
@@ -25,12 +26,14 @@ pub fn paint(layout_root: &LayoutBox, bounds: Rect) -> Canvas {
   canvas
 }
 
+// 生成绘制命令列表
 pub fn build_display_list(layout_root: &LayoutBox) -> DisplayList {
   let mut list = Vec::new();
   render_layout_box(&mut list, layout_root);
   list
 }
 
+// 递归生成绘制命令
 fn render_layout_box(list: &mut DisplayList, layout_box: &LayoutBox) {
   render_background(list, layout_box);
   render_borders(list, layout_box);
@@ -40,6 +43,7 @@ fn render_layout_box(list: &mut DisplayList, layout_box: &LayoutBox) {
   }
 }
 
+// 绘制背景命令
 fn render_background(list: &mut DisplayList, layout_box: &LayoutBox) {
   // bg:border+padding+content
   get_color(layout_box, "background").map(|color| {
@@ -50,6 +54,7 @@ fn render_background(list: &mut DisplayList, layout_box: &LayoutBox) {
   });
 }
 
+// 绘制边框命令
 fn render_borders(list: &mut DisplayList, layout_box: &LayoutBox) {
   let color = match get_color(layout_box, "border-color") {
     Some(color) => color,
@@ -104,6 +109,7 @@ fn render_borders(list: &mut DisplayList, layout_box: &LayoutBox) {
   list.push(DisplayCommand::SolidColor(color, bottom_rect));
 }
 
+// 获取某个属性对应的色值
 fn get_color(layout_box: &LayoutBox, name: &str) -> Option<Color> {
   match layout_box.box_type {
     BlockNode(style) | InlineNode(style) => match style.value(name) {
@@ -129,6 +135,7 @@ impl Canvas {
     }
   }
 
+  // 填充像素点
   fn paint_item(&mut self, item: &DisplayCommand) {
     match *item {
       DisplayCommand::SolidColor(color, rect) => {
