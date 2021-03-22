@@ -113,7 +113,7 @@ fn specified_values<'a>(elem: &ElementData, stylesheet: &'a StyleSheet) -> Prope
   return values;
 }
 
-// 生成渲染树
+// 生成样式树
 pub fn style_tree<'a>(root: &'a Node, stylesheet: &'a StyleSheet) -> StyleNode<'a> {
   StyleNode {
     node: root,
