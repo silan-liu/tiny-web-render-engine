@@ -1,6 +1,7 @@
 pub mod css;
 pub mod dom;
 pub mod html;
+pub mod layout;
 pub mod source;
 pub mod style;
 
@@ -20,4 +21,7 @@ fn main() {
 
     let style_tree = style::style_tree(&root, &stylesheet);
     println!("{:?}", style_tree);
+
+    let layout_tree = layout::layout_tree(&style_tree, Default::default());
+    println!("{:?}", layout_tree);
 }
