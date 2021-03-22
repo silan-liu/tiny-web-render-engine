@@ -27,7 +27,7 @@ head {
 }
 
 .inner {
-  border-color: #cc0000;
+  border-color: #008000;
   border-width: 4px;
   height: 100px;
   margin-bottom: 20px;
@@ -35,10 +35,11 @@ head {
 }
 
 .inner#bye {
+  border-color: #ff0000;
   background: #ffff00;
 }
 
 span#name {
-  background: red;
+  background: #0033ff;
   color: white;
 }

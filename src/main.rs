@@ -17,13 +17,12 @@ fn main() {
     let node = dom::text(String::from("hello"));
     println!("{:?}", node);
 
-    let html = read_source("example/test.html".to_string()); //"<html><div classes=\"note\" id=\"test\"><p>hello</p></div></html>";
+    let html = read_source("example/test.html".to_string());
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 
-    let css_source = read_source("example/test.css".to_string());
-    // "#test {display:none;} p, div.note, #hello {background-color:#332234;margin-top:10.2px;postion:absolute;}";
-    let stylesheet = css::parse(css_source.to_string());
+    let css = read_source("example/test.css".to_string());
+    let stylesheet = css::parse(css.to_string());
     println!("{:?}", stylesheet);
 
     let style_tree = style::style_tree(&root, &stylesheet);
@@ -35,16 +34,19 @@ fn main() {
     let filename = "output.png";
     let mut file = BufWriter::new(File::create(&filename).unwrap());
 
+    // 定义默认视口，800*600
     let mut viewport: layout::Dimensions = Default::default();
     viewport.content.width = 800.0;
     viewport.content.height = 600.0;
 
+    // 生成像素点
     let canvas = painting::paint(&layout_tree, viewport.content);
     let (w, h) = (canvas.width as u32, canvas.height as u32);
+
+    // 生成图片
     let img = image::ImageBuffer::from_fn(w, h, move |x, y| {
         let index = (y * w + x) as usize;
         let color = canvas.pixels[index];
-        // println!("color:{:?}", color);
         image::Pixel::from_channels(color.r, color.g, color.b, color.a)
     });
 
