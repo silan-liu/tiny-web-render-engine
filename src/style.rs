@@ -11,6 +11,13 @@ pub struct StyleNode<'a> {
   pub children: Vec<StyleNode<'a>>,
 }
 
+#[derive(Debug)]
+pub enum Display {
+  Inline,
+  Block,
+  None,
+}
+
 // 节点与选择器是否匹配
 fn matches(elem: &ElementData, selector: &Selector) -> bool {
   match *selector {
@@ -42,7 +49,30 @@ fn match_simple_selector(elem: &ElementData, selector: &SimpleSelector) -> bool 
   return true;
 }
 
-impl<'a> StyleNode<'a> {}
+impl<'a> StyleNode<'a> {
+  pub fn value(&self, name: &str) -> Option<Value> {
+    self.specified_values.get(name).cloned()
+  }
+
+  // 先查找 name 的值，不存在，则查找 fallback_name 的值，若仍然不存在，则返回 default
+  pub fn lookup(&self, name: &str, fallback_name: &str, default: Value) -> Value {
+    self
+      .value(name)
+      .unwrap_or_else(|| self.value(fallback_name).unwrap_or_else(|| default.clone()))
+  }
+
+  // 根据 display 的值返回对应类型
+  pub fn display(&self) -> Display {
+    match self.value("display") {
+      Some(Value::Keyword(s)) => match &*s {
+        "block" => Display::Block,
+        "none" => Display::None,
+        _ => Display::Inline,
+      },
+      _ => Display::Inline,
+    }
+  }
+}
 
 type MatchedRule<'a> = (Specificity, &'a Rule);
 
