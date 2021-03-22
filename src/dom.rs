@@ -42,7 +42,7 @@ impl ElementData {
   }
 
   pub fn classes(&self) -> HashSet<&str> {
-    match self.attributes.get("classes") {
+    match self.attributes.get("class") {
       Some(classlist) => classlist.split(' ').collect(),
       None => HashSet::new(),
     }

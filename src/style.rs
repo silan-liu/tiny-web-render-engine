@@ -98,6 +98,7 @@ fn matching_rules<'a>(elem: &ElementData, stylesheet: &'a StyleSheet) -> Vec<Mat
 fn specified_values<'a>(elem: &ElementData, stylesheet: &'a StyleSheet) -> PropertyMap {
   let mut values = HashMap::new();
   let mut rules = matching_rules(elem, stylesheet);
+  println!("specified_values, {:?}", rules);
 
   // [((1,0,0), rule1), ((0,1,1), rule2)] -> [((0,1,1), rule2), ((1,0,0), rule1)]
   // 从低优先级 -> 高优先级排序，这样在放入 map 时，高优先级会覆盖低优先级

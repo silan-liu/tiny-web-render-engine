@@ -42,7 +42,10 @@ fn render_layout_box(list: &mut DisplayList, layout_box: &LayoutBox) {
 
 fn render_background(list: &mut DisplayList, layout_box: &LayoutBox) {
   // bg:border+padding+content
+  println!("render_background");
+
   get_color(layout_box, "background").map(|color| {
+    println!("render_background, {:?}", color);
     list.push(DisplayCommand::SolidColor(
       color,
       layout_box.dimensions.border_box(),
@@ -138,6 +141,7 @@ impl Canvas {
         let y0 = rect.y.clamp(0.0, self.height as f32) as usize;
         let y1 = (rect.y + rect.height).clamp(0.0, self.height as f32) as usize;
 
+        println!("paint_item, {:?}, {:?}", color, rect);
         for y in y0..y1 {
           for x in x0..x1 {
             self.pixels[y * self.width + x] = color;

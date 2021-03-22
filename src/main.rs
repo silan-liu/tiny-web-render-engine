@@ -17,12 +17,12 @@ fn main() {
     let node = dom::text(String::from("hello"));
     println!("{:?}", node);
 
-    let html = "<html><div classes=\"note\" id=\"test\"><p>hello</p></div></html>";
+    let html = read_source("example/test.html".to_string()); //"<html><div classes=\"note\" id=\"test\"><p>hello</p></div></html>";
     let root = html::parse(html.to_string());
     println!("{:?}", root);
 
-    let css_source =
-        "#test {display:none;} p, div.note, #hello {background-color:#332234;margin-top:10.2px;postion:absolute;}";
+    let css_source = read_source("example/test.css".to_string());
+    // "#test {display:none;} p, div.note, #hello {background-color:#332234;margin-top:10.2px;postion:absolute;}";
     let stylesheet = css::parse(css_source.to_string());
     println!("{:?}", stylesheet);
 
@@ -44,6 +44,7 @@ fn main() {
     let img = image::ImageBuffer::from_fn(w, h, move |x, y| {
         let index = (y * w + x) as usize;
         let color = canvas.pixels[index];
+        // println!("color:{:?}", color);
         image::Pixel::from_channels(color.r, color.g, color.b, color.a)
     });
 
@@ -53,4 +54,13 @@ fn main() {
     } else {
         println!("Error save output as {}", filename);
     }
+}
+
+fn read_source(filename: String) -> String {
+    let mut str = String::new();
+    File::open(filename)
+        .unwrap()
+        .read_to_string(&mut str)
+        .unwrap();
+    str
 }
